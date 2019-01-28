@@ -24,7 +24,7 @@ import (
 
 	"context"
 
-	"sigs.k8s.io/cluster-api/pkg/apis/cluster/v1alpha1"
+	"sigs.k8s.io/cluster-api/pkg/apis/machine/v1beta1"
 	"sigs.k8s.io/cluster-api/pkg/controller/noderefutil"
 	"sigs.k8s.io/cluster-api/pkg/util"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -66,7 +66,7 @@ func (c *ReconcileNode) link(node *corev1.Node) error {
 	namespace = util.GetNamespaceOrDefault(namespace)
 	key := client.ObjectKey{Namespace: namespace, Name: mach}
 
-	machine := &v1alpha1.Machine{}
+	machine := &v1beta1.Machine{}
 	if err = c.Client.Get(context.Background(), key, machine); err != nil {
 		klog.Errorf("Error getting machine %v: %v\n", mach, err)
 		return err
@@ -100,7 +100,7 @@ func (c *ReconcileNode) unlink(node *corev1.Node) error {
 	namespace = util.GetNamespaceOrDefault(namespace)
 	key := client.ObjectKey{Namespace: namespace, Name: mach}
 
-	machine := &v1alpha1.Machine{}
+	machine := &v1beta1.Machine{}
 	if err = c.Client.Get(context.Background(), key, machine); err != nil {
 		klog.Errorf("Error getting machine %v: %v\n", mach, err)
 		return err
