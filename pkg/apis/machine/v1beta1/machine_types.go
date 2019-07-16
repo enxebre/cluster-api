@@ -165,6 +165,10 @@ type MachineStatus struct {
 	// E.g. Pending, Running, Terminating, Failed etc.
 	// +optional
 	Phase *string `json:"phase,omitempty"`
+
+	State  string  `json:"state,omitempty"`
+	Region *string `json:"region,omitempty"`
+	Zone   *string `json:"zone,omitempty"`
 }
 
 // LastOperation represents the detail of the last performed operation on the MachineObject.
