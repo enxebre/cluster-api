@@ -14,6 +14,7 @@
 * [Machine Controller](common_code/machine_controller.md)
 * [MachineSet Controller](common_code/machineset_controller.md)
 * [MachineDeployment Controller](common_code/machinedeployment_controller.md)
+* [Node Controller](common_code/node_controller.md)
 
 ## Creating a New Provider
 
@@ -24,8 +25,4 @@
 * [Create Actuators](provider_implementations/create_actuators.md)
 * [Register Controllers](provider_implementations/register_controllers.md)
 * [Building, Running, and Testing](provider_implementations/building_running_and_testing.md)
-
-## Appendices
-
-* [Cluster API KEP](appendices/keps/0003-cluster-api.md)
 

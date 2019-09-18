@@ -19,30 +19,22 @@ package machineset
 import (
 	"context"
 
-	"github.com/openshift/cluster-api/pkg/apis/machine/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/klog"
+	"sigs.k8s.io/cluster-api/pkg/apis/cluster/v1alpha1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func (c *ReconcileMachineSet) getMachineSetsForMachine(m *v1beta1.Machine) []*v1beta1.MachineSet {
+func (c *ReconcileMachineSet) getMachineSetsForMachine(m *v1alpha1.Machine) []*v1alpha1.MachineSet {
 	if len(m.Labels) == 0 {
 		klog.Warningf("No machine sets found for Machine %v because it has no labels", m.Name)
 		return nil
 	}
 
-	msList := &v1beta1.MachineSetList{}
+	msList := &v1alpha1.MachineSetList{}
 	listOptions := &client.ListOptions{
 		Namespace: m.Namespace,
-		// This is set so the fake client can be used for unit test. See:
-		// https://github.com/kubernetes-sigs/controller-runtime/issues/168
-		Raw: &metav1.ListOptions{
-			TypeMeta: metav1.TypeMeta{
-				APIVersion: v1beta1.SchemeGroupVersion.String(),
-				Kind:       "MachineSet",
-			},
-		},
 	}
 
 	err := c.Client.List(context.Background(), listOptions, msList)
@@ -51,7 +43,7 @@ func (c *ReconcileMachineSet) getMachineSetsForMachine(m *v1beta1.Machine) []*v1
 		return nil
 	}
 
-	var mss []*v1beta1.MachineSet
+	var mss []*v1alpha1.MachineSet
 	for idx := range msList.Items {
 		ms := &msList.Items[idx]
 		if hasMatchingLabels(ms, m) {
@@ -62,20 +54,23 @@ func (c *ReconcileMachineSet) getMachineSetsForMachine(m *v1beta1.Machine) []*v1
 	return mss
 }
 
-func hasMatchingLabels(machineSet *v1beta1.MachineSet, machine *v1beta1.Machine) bool {
+func hasMatchingLabels(machineSet *v1alpha1.MachineSet, machine *v1alpha1.Machine) bool {
 	selector, err := metav1.LabelSelectorAsSelector(&machineSet.Spec.Selector)
 	if err != nil {
 		klog.Warningf("unable to convert selector: %v", err)
 		return false
 	}
+
 	// If a deployment with a nil or empty selector creeps in, it should match nothing, not everything.
 	if selector.Empty() {
 		klog.V(2).Infof("%v machineset has empty selector", machineSet.Name)
 		return false
 	}
+
 	if !selector.Matches(labels.Set(machine.Labels)) {
 		klog.V(4).Infof("%v machine has mismatch labels", machine.Name)
 		return false
 	}
+
 	return true
 }

@@ -13,11 +13,10 @@ go_library(
         "urlbackoff.go",
         "zz_generated.deepcopy.go",
     ],
-    importmap = "github.com/openshift/cluster-api/vendor/k8s.io/client-go/rest",
+    importmap = "sigs.k8s.io/cluster-api/vendor/k8s.io/client-go/rest",
     importpath = "k8s.io/client-go/rest",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/glog:go_default_library",
         "//vendor/golang.org/x/net/http2:go_default_library",
         "//vendor/golang.org/x/oauth2:go_default_library",
         "//vendor/k8s.io/apimachinery/pkg/api/errors:go_default_library",
@@ -37,5 +36,6 @@ go_library(
         "//vendor/k8s.io/client-go/transport:go_default_library",
         "//vendor/k8s.io/client-go/util/cert:go_default_library",
         "//vendor/k8s.io/client-go/util/flowcontrol:go_default_library",
+        "//vendor/k8s.io/klog:go_default_library",
     ],
 )

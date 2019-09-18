@@ -17,10 +17,10 @@ limitations under the License.
 package phases
 
 import (
-	"github.com/openshift/cluster-api/cmd/clusterctl/clusterdeployer/clusterclient"
-	clusterv1 "github.com/openshift/cluster-api/pkg/apis/cluster/v1alpha1"
 	"github.com/pkg/errors"
 	"k8s.io/klog"
+	"sigs.k8s.io/cluster-api/cmd/clusterctl/clusterdeployer/clusterclient"
+	clusterv1 "sigs.k8s.io/cluster-api/pkg/apis/cluster/v1alpha1"
 )
 
 func ApplyMachines(client clusterclient.Client, namespace string, machines []*clusterv1.Machine) error {
@@ -34,7 +34,7 @@ func ApplyMachines(client clusterclient.Client, namespace string, machines []*cl
 	}
 
 	klog.Infof("Creating machines in namespace %q", namespace)
-	if err := client.CreateMachineObjects(machines, namespace); err != nil {
+	if err := client.CreateMachines(machines, namespace); err != nil {
 		return err
 	}
 

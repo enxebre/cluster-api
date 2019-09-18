@@ -17,13 +17,12 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/openshift/cluster-api/cmd/clusterctl/clusterdeployer/bootstrap"
-
-	"github.com/openshift/cluster-api/cmd/clusterctl/clusterdeployer/clusterclient"
-	"github.com/openshift/cluster-api/cmd/clusterctl/phases"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"k8s.io/klog"
+	"sigs.k8s.io/cluster-api/cmd/clusterctl/clusterdeployer/bootstrap"
+	"sigs.k8s.io/cluster-api/cmd/clusterctl/clusterdeployer/clusterclient"
+	"sigs.k8s.io/cluster-api/cmd/clusterctl/phases"
 )
 
 type AlphaPhaseCreateBootstrapClusterOptions struct {
@@ -62,6 +61,6 @@ func RunAlphaPhaseCreateBootstrapCluster(pcbco *AlphaPhaseCreateBootstrapCluster
 func init() {
 	// Optional flags
 	alphaPhaseCreateBootstrapClusterCmd.Flags().StringVarP(&pcbco.KubeconfigOutput, "kubeconfig-out", "", "minikube.kubeconfig", "Where to output the kubeconfig for the bootstrap cluster")
-	pcbco.Bootstrap.AddFlags(alphaPhasesCmd.Flags())
+	pcbco.Bootstrap.AddFlags(alphaPhaseCreateBootstrapClusterCmd.Flags())
 	alphaPhasesCmd.AddCommand(alphaPhaseCreateBootstrapClusterCmd)
 }

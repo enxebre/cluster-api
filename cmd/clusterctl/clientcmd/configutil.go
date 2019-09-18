@@ -19,11 +19,11 @@ limitations under the License.
 package clientcmd
 
 import (
-	"github.com/openshift/cluster-api/pkg/client/clientset_generated/clientset"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/tools/clientcmd/api"
+	"sigs.k8s.io/cluster-api/pkg/client/clientset_generated/clientset"
 )
 
 // This is a convenience method to prevent the need of importing both this version of clientcmd and the client-go version
@@ -42,10 +42,10 @@ func NewCoreClientSetForDefaultSearchPath(kubeconfigPath string, overrides clien
 	return kubernetes.NewForConfig(config)
 }
 
-// NewClusterApiClientForDefaultSearchPath creates a Cluster API clientset. If the kubeconfigPath is specified then the configuration is loaded from that path.
+// NewClusterAPIClientForDefaultSearchPath creates a Cluster API clientset. If the kubeconfigPath is specified then the configuration is loaded from that path.
 // Otherwise the default kubeconfig search path is used.
 // The overrides parameter is used to select a specific context of the config, for example, select the context with a given cluster name or namespace.
-func NewClusterApiClientForDefaultSearchPath(kubeconfigPath string, overrides clientcmd.ConfigOverrides) (*clientset.Clientset, error) {
+func NewClusterAPIClientForDefaultSearchPath(kubeconfigPath string, overrides clientcmd.ConfigOverrides) (*clientset.Clientset, error) {
 	config, err := newRestConfigForDefaultSearchPath(kubeconfigPath, overrides)
 	if err != nil {
 		return nil, err
@@ -72,16 +72,16 @@ func newRestConfigForDefaultSearchPath(kubeconfigPath string, overrides clientcm
 			return config, nil
 		}
 	}
-	apiConfig, err := newApiConfigForDefaultSearchPath(kubeconfigPath)
+	apiConfig, err := newAPIConfigForDefaultSearchPath(kubeconfigPath)
 	if err != nil {
 		return nil, err
 	}
 	return newRestConfig(apiConfig, overrides)
 }
 
-// newApiConfigForDefaultSearchPath creates an api.Config by searching for the kubeconfig on the default search path. If an override 'kubeconfigPath' is
+// newAPIConfigForDefaultSearchPath creates an api.Config by searching for the kubeconfig on the default search path. If an override 'kubeconfigPath' is
 // given then that path is used instead of the default path.
-func newApiConfigForDefaultSearchPath(kubeconfigPath string) (*api.Config, error) {
+func newAPIConfigForDefaultSearchPath(kubeconfigPath string) (*api.Config, error) {
 	configLoader := clientcmd.NewDefaultClientConfigLoadingRules()
 	configLoader.ExplicitPath = kubeconfigPath
 	return configLoader.Load()

@@ -19,7 +19,7 @@ package errors
 import (
 	"fmt"
 
-	commonerrors "github.com/openshift/cluster-api/pkg/apis/machine/common"
+	commonerrors "sigs.k8s.io/cluster-api/pkg/apis/cluster/common"
 )
 
 // A more descriptive kind of error that represents an error condition that

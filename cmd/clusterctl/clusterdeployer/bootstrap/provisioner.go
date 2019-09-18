@@ -17,10 +17,10 @@ limitations under the License.
 package bootstrap
 
 import (
-	"github.com/openshift/cluster-api/cmd/clusterctl/clusterdeployer/bootstrap/existing"
-	"github.com/openshift/cluster-api/cmd/clusterctl/clusterdeployer/bootstrap/kind"
-	"github.com/openshift/cluster-api/cmd/clusterctl/clusterdeployer/bootstrap/minikube"
 	"github.com/pkg/errors"
+	"sigs.k8s.io/cluster-api/cmd/clusterctl/clusterdeployer/bootstrap/existing"
+	"sigs.k8s.io/cluster-api/cmd/clusterctl/clusterdeployer/bootstrap/kind"
+	"sigs.k8s.io/cluster-api/cmd/clusterctl/clusterdeployer/bootstrap/minikube"
 )
 
 // Can provision a kubernetes cluster
@@ -41,6 +41,6 @@ func Get(o Options) (ClusterProvisioner, error) {
 			return existing.New(o.KubeConfig)
 		}
 
-		return nil, errors.New("no bootstrap provisioner specified, you can specify `--bootstrap-cluster-kubeconfig` to use an existing Kubernetes cluster or `--bootstrap-type` to use a built-in ephemeral cluster.")
+		return nil, errors.New("no bootstrap provisioner specified, you can specify `--bootstrap-cluster-kubeconfig` to use an existing Kubernetes cluster or `--bootstrap-type` to use a built-in ephemeral cluster")
 	}
 }

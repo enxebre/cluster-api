@@ -1,9 +1,9 @@
-# See the OWNERS docs: https://git.k8s.io/community/contributors/guide/owners.md
+# See the OWNERS docs at https://go.k8s.io/owners
 
 approvers:
-  - enxebre
-  - frobware
-  - ingvagabund
-  - bison
-  - spangenberg
-  - vikaschoudhary16
+  - sig-cluster-lifecycle-leads
+  - cluster-api-admins
+  - cluster-api-maintainers
+
+reviewers:
+  - cluster-api-maintainers

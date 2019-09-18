@@ -10,14 +10,14 @@ go_library(
         "watch.go",
         "zz_generated.deepcopy.go",
     ],
-    importmap = "github.com/openshift/cluster-api/vendor/k8s.io/apimachinery/pkg/watch",
+    importmap = "sigs.k8s.io/cluster-api/vendor/k8s.io/apimachinery/pkg/watch",
     importpath = "k8s.io/apimachinery/pkg/watch",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/golang/glog:go_default_library",
         "//vendor/k8s.io/apimachinery/pkg/runtime:go_default_library",
         "//vendor/k8s.io/apimachinery/pkg/runtime/schema:go_default_library",
         "//vendor/k8s.io/apimachinery/pkg/util/net:go_default_library",
         "//vendor/k8s.io/apimachinery/pkg/util/runtime:go_default_library",
+        "//vendor/k8s.io/klog:go_default_library",
     ],
 )

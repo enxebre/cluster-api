@@ -6,11 +6,11 @@ go_library(
         "doc.go",
         "patch.go",
     ],
-    importmap = "github.com/openshift/cluster-api/vendor/sigs.k8s.io/controller-runtime/pkg/patch",
+    importmap = "sigs.k8s.io/cluster-api/vendor/sigs.k8s.io/controller-runtime/pkg/patch",
     importpath = "sigs.k8s.io/controller-runtime/pkg/patch",
     visibility = ["//visibility:public"],
     deps = [
-        "//vendor/github.com/mattbaird/jsonpatch:go_default_library",
+        "//vendor/github.com/appscode/jsonpatch:go_default_library",
         "//vendor/k8s.io/apimachinery/pkg/runtime:go_default_library",
     ],
 )

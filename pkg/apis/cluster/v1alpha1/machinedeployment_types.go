@@ -19,8 +19,7 @@ package v1alpha1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
-
-	"github.com/openshift/cluster-api/pkg/apis/cluster/common"
+	"sigs.k8s.io/cluster-api/pkg/apis/cluster/common"
 )
 
 /// [MachineDeploymentSpec]
@@ -168,6 +167,7 @@ type MachineDeploymentStatus struct {
 /// [MachineDeployment]
 // MachineDeployment is the Schema for the machinedeployments API
 // +k8s:openapi-gen=true
+// +kubebuilder:resource:shortName=md
 // +kubebuilder:subresource:status
 // +kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.replicas,selectorpath=.status.labelSelector
 type MachineDeployment struct {

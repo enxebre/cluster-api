@@ -19,7 +19,7 @@ package machine
 import (
 	"context"
 
-	machinev1 "github.com/openshift/cluster-api/pkg/apis/machine/v1beta1"
+	clusterv1 "sigs.k8s.io/cluster-api/pkg/apis/cluster/v1alpha1"
 )
 
 /// [Actuator]
@@ -27,13 +27,13 @@ import (
 // methods should be idempotent unless otherwise specified.
 type Actuator interface {
 	// Create the machine.
-	Create(context.Context, *machinev1.Cluster, *machinev1.Machine) error
+	Create(context.Context, *clusterv1.Cluster, *clusterv1.Machine) error
 	// Delete the machine. If no error is returned, it is assumed that all dependent resources have been cleaned up.
-	Delete(context.Context, *machinev1.Cluster, *machinev1.Machine) error
+	Delete(context.Context, *clusterv1.Cluster, *clusterv1.Machine) error
 	// Update the machine to the provided definition.
-	Update(context.Context, *machinev1.Cluster, *machinev1.Machine) error
+	Update(context.Context, *clusterv1.Cluster, *clusterv1.Machine) error
 	// Checks if the machine currently exists.
-	Exists(context.Context, *machinev1.Cluster, *machinev1.Machine) (bool, error)
+	Exists(context.Context, *clusterv1.Cluster, *clusterv1.Machine) (bool, error)
 }
 
 /// [Actuator]

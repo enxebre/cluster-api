@@ -19,7 +19,7 @@ package cluster
 import (
 	"sync"
 
-	"github.com/openshift/cluster-api/pkg/apis/cluster/v1alpha1"
+	"sigs.k8s.io/cluster-api/pkg/apis/cluster/v1alpha1"
 )
 
 type TestActuator struct {

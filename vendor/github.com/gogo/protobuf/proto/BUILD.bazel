@@ -32,8 +32,10 @@ go_library(
         "text_parser.go",
         "timestamp.go",
         "timestamp_gogo.go",
+        "wrappers.go",
+        "wrappers_gogo.go",
     ],
-    importmap = "github.com/openshift/cluster-api/vendor/github.com/gogo/protobuf/proto",
+    importmap = "sigs.k8s.io/cluster-api/vendor/github.com/gogo/protobuf/proto",
     importpath = "github.com/gogo/protobuf/proto",
     visibility = ["//visibility:public"],
 )
