@@ -33,6 +33,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/utils/pointer"
 	clusterv1 "sigs.k8s.io/cluster-api/api/v1alpha3"
 	"sigs.k8s.io/cluster-api/controllers/external"
 	controlplanev1 "sigs.k8s.io/cluster-api/controlplane/kubeadm/api/v1alpha3"
@@ -230,10 +231,10 @@ var _ = Describe("MachineHealthCheck Reconciler", func() {
 			expectedStatus      clusterv1.MachineHealthCheckStatus
 		}
 
-		var labels = map[string]string{"cluster": clusterName, "nodepool": "foo"}
-		var controlPlaneLabels = map[string]string{"cluster": clusterName, "nodepool": "foo", clusterv1.MachineControlPlaneLabelName: ""}
-		var machineSetOR = metav1.OwnerReference{APIVersion: clusterv1.GroupVersion.String(), Kind: "MachineSet", Name: "machineset", UID: "machinset"}
-		var controlPlaneOR = metav1.OwnerReference{APIVersion: controlplanev1.GroupVersion.String(), Kind: "KubeadmControlPlane", Name: "controlplane", UID: "controlplane"}
+		var labels = map[string]string{clusterv1.ClusterLabelName: clusterName, "nodepool": "foo"}
+		var controlPlaneLabels = map[string]string{clusterv1.ClusterLabelName: clusterName, "nodepool": "foo", clusterv1.MachineControlPlaneLabelName: ""}
+		var machineSetOR = metav1.OwnerReference{APIVersion: clusterv1.GroupVersion.String(), Kind: "MachineSet", Name: "machineset", UID: "machinset", Controller: pointer.BoolPtr(true)}
+		var controlPlaneOR = metav1.OwnerReference{APIVersion: controlplanev1.GroupVersion.String(), Kind: "KubeadmControlPlane", Name: "controlplane", UID: "controlplane", Controller: pointer.BoolPtr(true)}
 		var healthyNodeCondition = corev1.NodeCondition{Type: corev1.NodeReady, Status: corev1.ConditionTrue}
 		var unhealthyNodeCondition = corev1.NodeCondition{Type: corev1.NodeReady, Status: corev1.ConditionUnknown, LastTransitionTime: metav1.NewTime(time.Now().Add(-10 * time.Minute))}
 
