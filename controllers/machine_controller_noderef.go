@@ -56,7 +56,12 @@ func (r *MachineReconciler) reconcileNode(ctx context.Context, cluster *clusterv
 	}
 
 	// Even if Status.NodeRef exists, continue to do the following checks to make sure Node is healthy
-	node, err := r.getNode(ctx, remoteClient, providerID)
+	node, err := r.setNodeProviderID(ctx, remoteClient, providerID, machine.Status.Addresses)
+	if err != nil {
+		log.Error(err, "Failed to set Node ProviderID")
+	}
+
+	node, err = r.getNode(ctx, remoteClient, providerID)
 	if err != nil {
 		if err == ErrNodeNotFound {
 			// While a NodeRef is set in the status, failing to get that node means the node is deleted.
@@ -156,6 +161,41 @@ func (r *MachineReconciler) getNode(ctx context.Context, c client.Reader, provid
 
 			if providerID.Equals(nodeProviderID) {
 				return &node, nil
+			}
+		}
+
+		if nodeList.Continue == "" {
+			break
+		}
+	}
+
+	return nil, ErrNodeNotFound
+}
+
+func (r *MachineReconciler) setNodeProviderID(ctx context.Context, c client.Client, providerID *noderefutil.ProviderID, addresses clusterv1.MachineAddresses) (*corev1.Node, error) {
+	log := ctrl.LoggerFrom(ctx, "providerID", addresses)
+
+	nodeList := corev1.NodeList{}
+	for {
+		if err := c.List(ctx, &nodeList, client.Continue(nodeList.Continue)); err != nil {
+			return nil, err
+		}
+
+		for _, node := range nodeList.Items {
+			// TODO (alberto) index node by IPs and use the cache to find the node.
+			// This is a temporary hack because of a lack of cloud provider anyway.
+			for _, nodeAddress := range node.Status.Addresses {
+				for _, machineAddress := range addresses {
+					if nodeAddress.Address == machineAddress.Address {
+						node.Spec.ProviderID = providerID.String()
+						log.Info("found providerID for node", "nodename",
+							node.GetName(), "providerID", providerID.String())
+						if err := c.Update(ctx, &node); err != nil {
+							log.Error(err, "failed to update node with providerID")
+						}
+						return &node, nil
+					}
+				}
 			}
 		}
 
