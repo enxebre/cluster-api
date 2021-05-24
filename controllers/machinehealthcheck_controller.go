@@ -25,6 +25,7 @@ import (
 	"time"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/labels"
 
 	"github.com/go-logr/logr"
 	"github.com/pkg/errors"
@@ -461,13 +462,19 @@ func (r *MachineHealthCheckReconciler) machineToMachineHealthCheck(o client.Obje
 		panic(fmt.Sprintf("Expected a Machine, got %T", o))
 	}
 
+	if len(m.Labels) == 0 {
+		return nil
+	}
+
 	mhcList := &clusterv1.MachineHealthCheckList{}
 	if err := r.Client.List(
 		context.TODO(),
 		mhcList,
 		client.InNamespace(m.Namespace),
 		client.MatchingLabels{clusterv1.ClusterLabelName: m.Spec.ClusterName},
-	); err != nil {
+		client.MatchingLabelsSelector{
+			Selector: labels.Set(m.Labels).AsSelector(),
+		}); err != nil {
 		return nil
 	}
 

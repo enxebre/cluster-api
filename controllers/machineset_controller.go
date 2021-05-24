@@ -534,8 +534,8 @@ func (r *MachineSetReconciler) MachineToMachineSets(o client.Object) []ctrl.Requ
 		}
 	}
 
-	mss := r.getMachineSetsForMachine(context.TODO(), m)
-	if len(mss) == 0 {
+	mss, err := r.getMachineSetsForMachine(context.TODO(), m)
+	if len(mss) == 0 || err != nil {
 		return nil
 	}
 
@@ -547,53 +547,24 @@ func (r *MachineSetReconciler) MachineToMachineSets(o client.Object) []ctrl.Requ
 	return result
 }
 
-func (r *MachineSetReconciler) getMachineSetsForMachine(ctx context.Context, m *clusterv1.Machine) []*clusterv1.MachineSet {
+func (r *MachineSetReconciler) getMachineSetsForMachine(ctx context.Context, m *clusterv1.Machine) ([]clusterv1.MachineSet, error) {
 	log := ctrl.LoggerFrom(ctx, "machine", m.Name)
 
 	if len(m.Labels) == 0 {
 		log.Info("No machine sets found because it has no labels")
-		return nil
+		return nil, nil
 	}
 
 	msList := &clusterv1.MachineSetList{}
-	err := r.Client.List(ctx, msList, client.InNamespace(m.Namespace))
-	if err != nil {
-		log.Error(err, "Failed to list machine sets")
-		return nil
+	if err := r.Client.List(ctx, msList,
+		client.InNamespace(m.Namespace),
+		client.MatchingLabelsSelector{
+			Selector: labels.Set(m.Labels).AsSelector(),
+		}); err != nil {
+		return nil, fmt.Errorf("failed to list MachineSets: %w", err)
 	}
 
-	var mss []*clusterv1.MachineSet
-	for idx := range msList.Items {
-		ms := &msList.Items[idx]
-		if r.hasMatchingLabels(ctx, ms, m) {
-			mss = append(mss, ms)
-		}
-	}
-
-	return mss
-}
-
-func (r *MachineSetReconciler) hasMatchingLabels(ctx context.Context, machineSet *clusterv1.MachineSet, machine *clusterv1.Machine) bool {
-	log := ctrl.LoggerFrom(ctx, "machine", machine.Name)
-
-	selector, err := metav1.LabelSelectorAsSelector(&machineSet.Spec.Selector)
-	if err != nil {
-		log.Error(err, "Unable to convert selector")
-		return false
-	}
-
-	// If a deployment with a nil or empty selector creeps in, it should match nothing, not everything.
-	if selector.Empty() {
-		log.V(2).Info("Machineset has empty selector")
-		return false
-	}
-
-	if !selector.Matches(labels.Set(machine.Labels)) {
-		log.V(4).Info("Machine has mismatch labels")
-		return false
-	}
-
-	return true
+	return msList.Items, nil
 }
 
 func (r *MachineSetReconciler) shouldAdopt(ms *clusterv1.MachineSet) bool {
