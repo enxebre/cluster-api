@@ -174,6 +174,7 @@ func patchMachineDeployment(ctx context.Context, patchHelper *patch.Helper, d *c
 		patch.WithOwnedConditions{Conditions: []clusterv1.ConditionType{
 			clusterv1.ReadyCondition,
 			clusterv1.MachineDeploymentAvailableCondition,
+			clusterv1.ResizedCondition,
 		}},
 	)
 	return patchHelper.Patch(ctx, d, options...)
